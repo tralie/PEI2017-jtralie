@@ -17,6 +17,15 @@ function gnss_times=timeconv(weeknums,timeofweeks)
 %
 % gnss_times         GNSS timestamp (seconds) 
 %
+% EXAMPLE: 
+
+% weeknums = 1754; 
+% timeofweeks = 3600;
+% gnss_times_example = timeconv(weeknums,timeofweeks);
+%
+% The above will return 1.0608e+09 (in seconds)
+% This is the number of seconds elapsed since the GPS date, Jan 6, 1980.
+%
 % Last modified by jtralie@princeton.edu on 07/26/2017
 
 gnss_times = gadd(timeofweeks,gmultiply(weeknums,604800)); 
