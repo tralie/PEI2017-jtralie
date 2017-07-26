@@ -18,7 +18,7 @@ function gnss_times=timeconv(weeknums,timeofweeks)
 % gnss_times         GNSS timestamp (seconds) 
 %
 % EXAMPLE: 
-
+%
 % weeknums = 1754; 
 % timeofweeks = 3600;
 % gnss_times_example = timeconv(weeknums,timeofweeks);
