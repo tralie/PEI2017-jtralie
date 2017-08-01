@@ -88,10 +88,10 @@ PR_mm = dataArray1{:, 19}/1000; % Pseudorange (converted from m to km)
 
 
 % Convert latitude/longitude to radians for lla2ecef function
-lat_rad = deg2rad(latdeg);
-lon_rad = deg2rad(londeg);
+lat_rad = deg2rad(lat);
+lon_rad = deg2rad(lon);
 
-[rX, rY, rZ] = lla2ecef(lat_rad,lon_rad,height); % convert from radians
+[rX, rY, rZ] = lla2ecef(lat_rad,lon_rad,alt); % convert from radians
 % to degrees. This conversion requires the user have the function 'lla2ecef' 
 rX=rX/1000; % convert to km 
 rY=rY/1000; % km 
