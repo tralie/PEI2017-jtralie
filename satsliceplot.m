@@ -1,10 +1,11 @@
-function varargout=satsliceplot(PVTSat,FileName,xyzE,az,el)
-% [err,corerr] = prerror(PVTSatFileName,MeasEpochFileName,GPSNav,SVID,lat,lon,alt)
+function varargout=satsliceplot(PVTSatFileName,OutputFileName,xyzE,az,el)
+% varargout = satsliceplot(PVTSatFileName,OutputFileName,xyzE,az,el)
 % 
-% Calculation of the error between the pseudorange and the geometric
-% distance of a satellite to a fixed reference point.
-% Requires the function 'lla2ecef' to convert from lat, lon, and altitude
-% to earth-centered, earth fixed (ECEF) cartesian coordinates. Also,
+% Creates plots for each hour on the hour of the satellite orbit slices
+% (the geometric distance between the satellite and a fixed point xyzE 
+% determines the radius of this circular slice). Exports each plot to
+% a .pdf file. The user needs the 'timeconv' and 'gnss_datevec' functions
+% from my 'PEI-2017' github repository. Additionally,
 % the user needs the functions 'defval' and 'polecircle2'
 % from Frederik J. Simons' slepian github repository. 
 %
@@ -44,7 +45,7 @@ function varargout=satsliceplot(PVTSat,FileName,xyzE,az,el)
 % Initialize variables.
 delimiter = ',';
 formatSpec = '%f%f%f%C%f%f%f%f%f%f%f%f%f%f%C%[^\n\r]';
-fileID = fopen(PVTSat,'r');
+fileID = fopen(PVTSatFileName,'r');
 dataArray = textscan(fileID, formatSpec, 'Delimiter', delimiter, 'TextType', 'string', 'EmptyValue', NaN,  'ReturnOnError', false);
 fclose(fileID);
 
@@ -117,7 +118,7 @@ end
 % pole circle plotting
 h = figure;
 for j = 1:length(tdat)
-    Files = [FileName,num2str(j)];
+    Files = [OutputFileName,num2str(j)];
     xyzRfinal1 = xyzRfinal{j};
     earth_sphere
     hold on
