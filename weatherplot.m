@@ -6,7 +6,7 @@ function varargout=weatherplot(ASCIIIfiles,OutputFileName,Title)
 % created from inputted ASCIIIn data (files outputted from a bin2asc
 % conversion of SBF files). 
 % Also, the user needs the functions 'timeconv' and 'gnss_datevec' from my
-% 'PEI-2017' github repository. 
+% 'PEI2017-jtralie' github repository. 
 %
 % INPUT:
 %
