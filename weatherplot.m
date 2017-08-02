@@ -1,12 +1,12 @@
 function varargout=weatherplot(ASCIIIfiles,OutputFileName,Title)
 % varargout = weatherplot(ASCIIIfiles,OutputFileName,Title)
 % 
-% Calculation of the error between the pseudorange and the geometric
-% distance of a satellite to a fixed reference point.
-% Requires the function 'lla2ecef' to convert from lat, lon, and altitude
-% to earth-centered, earth fixed (ECEF) cartesian coordinates. Also,
-% the user needs the function 'defval' from Frederik J. Simons' slepian
-% github repository. 
+% Plots a 5 subplot figure consisting of integrated water vapor,
+% temperature, pressure, relative humidity, and rain. These plots are
+% created from inputted ASCIIIn data (files outputted from a bin2asc
+% conversion of SBF files). 
+% Also, the user needs the functions 'timeconv' and 'gnss_datevec' from my
+% 'PEI-2017' github repository. 
 %
 % INPUT:
 %
