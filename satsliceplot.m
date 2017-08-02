@@ -37,7 +37,7 @@ function varargout=satsliceplot(PVTSatFileName,OutputFileName,xyzE,az,el)
 % returned when I converted a file pton1900.17_ from SBF to ASCII using
 % bin2asc: 
 % PVTSat = 'pton1900.17__SBF_PVTSatCartesian.txt';
-% I have included this file in my github repository 'PEI-2017' for use and
+% I have included this file in my github repository 'PEI2017-jtralie' for use and
 % demo purposes. 
 % 
 % Last modified by jtralie@princeton.edu on 08/02/2017
