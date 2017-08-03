@@ -1,9 +1,13 @@
-function varargout=errormeshplot(PVTSatFile,MeasEpochFile,SVID,lat,lon,height,spacing,OutputFile)
+function varargout=errormeshplot(PVTSatFile,MeasEpochFile,GPSNavFile,SVID,lat,lon,height,spacing,OutputFile)
 % varargout = weatherplot(PVTSatFile,MeasEpochFile,SVID,lat,lon,height,spacing,OutputFile)
 %  
 % Generates a mesh plot of spacing by spacing dimensions of the simulated
-% error at different lat/lon values around the fixed lat/lon value given
-% on input. 
+% uncorrected pseudorange error at different lat/lon values around the 
+% fixed lat/lon value given on input (this will be the top mesh plot).
+% In addition, it also plots a corrected pseudorange plot (just considering
+% the satellite clock bias as given in the GPSNav files). This will be the
+% lower mesh plot. 
+% 
 % The user needs the 'defval' function from Frederik J. Simons' Slepian
 % github repository, and the 'lla2ecef' function to convert from lat, lon, 
 % and altitude to earth-centered, earth fixed (ECEF) cartesian coordinates.
@@ -18,6 +22,9 @@ function varargout=errormeshplot(PVTSatFile,MeasEpochFile,SVID,lat,lon,height,sp
 %
 % MeasEpochFile      The MeasEpoch2 file returned from a bin2asc conversion
 %                    of SBF files
+%
+% GPSNavFile          The GPSNav file returned from a bin2asc
+%                     conversion of SBF files
 %
 % SVID               The Space Vehicle Identification of the satellite
 %                    for which the error mesh plot will be generated. 
@@ -67,15 +74,17 @@ err = [];
 [a,b] = size(latvalues);
 index = a*b; 
 for i = 1:index  
-    err{i} = prerror(PVTSatFile,MeasEpochFile,SVID,latvalues(i),lonvalues(i),height);
+    [err{i},corerr{i}] = prerror(PVTSatFile,MeasEpochFile,GPSNavFile,SVID,latvalues(i),lonvalues(i),height);
 end
 
 %%
 for j = 1:length(err)
     error = err{j};
+    corerror = corerr{j};
     ind = isnan(error);
     ind = ind ~= 1;
     avgerr(j) = mean(error(ind));
+    avgcor(j) = mean(corerror(ind)); 
 end
 
 %% plotting
@@ -85,11 +94,16 @@ lonout = lonvalues(:)';
 latout = latvalues(:)';
 %a = scatter(lonout,latout,pointsize,avgerr,'filled')
 v = griddata(lonout,latout,avgerr,lonvalues,latvalues);
+w = griddata(lonout,latout,avgcor,lonvalues,latvalues); 
 mesh(lonvalues,latvalues,v)
 hold on
 plot3(lonout,latout,avgerr,'.')
 hold on
 plot(lon,lat,'r*')
+hold on
+mesh(lonvalues,latvalues,w)
+hold on
+plot3(lonout,latout,avgcor,'.') 
 text(lon,lat,'(Fixed)')
 h = colorbar;
 ylabel(h,'Pseudorange Error (%)')
@@ -102,6 +116,7 @@ zlim([0 1])
 title([SVID ' Uncorrected Pseudorange Error for Varying Lat/Lon - ' num2str(gnssdatevec(1,2)) '/' num2str(gnssdatevec(1,3))])
 colormap('hot')
 caxis([0 1]) 
+view(-44,7)
 hold off
 grid on
 print(f,OutputFile,'-dpdf','-fillpage','-r0')
