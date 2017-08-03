@@ -1,5 +1,5 @@
-function [err] = prerror(PVTSatFileName,MeasEpochFileName,SVID,lat,lon,alt)
-% [err] = prerror(PVTSatFileName,MeasEpochFileName,SVID,lat,lon,alt)
+function [err,corerr] = prerror(PVTSatFileName,MeasEpochFileName,GPSNavFileName,SVID,lat,lon,alt)
+% [err] = prerror(PVTSatFileName,MeasEpochFileName,GPSNavFileName,SVID,lat,lon,alt)
 % 
 % Calculation of the error between the pseudorange and the geometric
 % distance of a satellite to a fixed reference point.
@@ -16,6 +16,9 @@ function [err] = prerror(PVTSatFileName,MeasEpochFileName,SVID,lat,lon,alt)
 % MeasEpochFileName  The MeasEpoch2 file returned from a bin2asc conversion
 %                    of SBF files
 %
+% GPSNavFileName      The GPSNav file returned from a bin2asc
+%                     conversion of SBF files
+%
 % SVID               The Space Vehicle Identification of the satellite
 %                    for which the error will be calculated. 
 %
@@ -27,10 +30,16 @@ function [err] = prerror(PVTSatFileName,MeasEpochFileName,SVID,lat,lon,alt)
 %
 % OUTPUT:
 %
-% err                The uncorrected (for troposphere,ionosphere,multipath)
+% err                The uncorrected 
 %                    pseudorange error for each hour of the day. At some
 %                    hours, the satellite may not be visible to the receiver. 
 %                    In this case, that error element will be 'NaN'. 
+%
+% corerr             The corrected (for just satellite clock bias)
+%                    pseudorange error for each hour of the day. At some
+%                    hours, the satellite may not be visible to the
+%                    receiver. In this case, that error element will be
+%                    'NaN'. 
 %
 %
 % EXAMPLE:
@@ -40,6 +49,7 @@ function [err] = prerror(PVTSatFileName,MeasEpochFileName,SVID,lat,lon,alt)
 % bin2asc: 
 % PVTSatFileName = 'pton1900.17__SBF_PVTSatCartesian.txt';
 % MeasEpochFileName = 'pton1900.17__SBF_MeasEpoch2.txt';
+% GPSNavFileName = 'pton1900.17__SBF_GPSNav.txt';
 %
 % These files can be given to the prerror function along with a 
 % SVID # for the satellite you wish to calculate the pseudorange error for.
@@ -47,7 +57,7 @@ function [err] = prerror(PVTSatFileName,MeasEpochFileName,SVID,lat,lon,alt)
 % Let's choose GPS satellite, 'G05'. 
 % Using the above file parameters:
 % 
-% [err] = prerror(PVTSatFileName,MeasEpochFileName,'G05')
+% [err,corerr] = prerror(PVTSatFileName,MeasEpochFileName,GPSNavFileName,'G05',[],[],[])
 %
 % RETURNS:
 % 24 column matrix consisting of the calculated error when the satellite
@@ -55,8 +65,10 @@ function [err] = prerror(PVTSatFileName,MeasEpochFileName,SVID,lat,lon,alt)
 % the pseudorange error (thus, satellite 'G05' would be visible to the
 % receiver at these hours). For all other columns, prerror returns 'NaN'
 % since the satellite is not visible to the receiver. 
+% It also returns a 24 column matrix consisting of the corrected error
+% which follows a similar behavior to the above mentioned error matrix. 
 % 
-% Last modified by jtralie@princeton.edu on 08/01/2017
+% Last modified by jtralie@princeton.edu on 08/03/2017
 
 % data format setup/import 
 defval('lat',40.345811675440125) % Guyot latitude
@@ -86,6 +98,7 @@ TOWs_Meas = dataArray1{:, 1}; % TOW for the MeasEpoch file
 SVID_Meas = dataArray1{:,10}; % SVID for MeasEpoch file
 PR_mm = dataArray1{:, 19}/1000; % Pseudorange (converted from m to km)
 
+c = 299792458; % speed of light in a vacuum (m/s)
 
 % Convert latitude/longitude to radians for lla2ecef function
 lat_rad = deg2rad(lat);
@@ -103,6 +116,7 @@ r = sqrt((px-rX).^2 + (py-rY).^2 + (pz-rZ).^2);
 tdat = linspace(TOW(1),TOW(end)-3585,24); % space times at 1 hour increments
 
 % find values that occur at each hour on the hour
+pxc=[];pyc=[];pzc=[];
 for i=1:length(tdat)
     T = TOW == tdat(i);
     for j = 1:length(T)
@@ -193,8 +207,9 @@ for j = 1:length(tdat)
     end
 end
 
+satclk = satclkbias(GPSNavFileName,SVID); 
 % absolute value error calculation 
 err = abs(100*(cell2mat(prg1) - cell2mat(rad1))./cell2mat(rad1));
-
-%% Clear temporary variables
+corerr = abs(100*((cell2mat(prg1)*1000) - (cell2mat(rad1)*1000) + c*(satclk))./(cell2mat(rad1)*1000));
+% Clear temporary variables
 clearvars PVTSat delimiter formatSpec fileID dataArray ans;
