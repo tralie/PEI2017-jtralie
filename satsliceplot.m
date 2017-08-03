@@ -7,7 +7,8 @@ function varargout=satsliceplot(PVTSatFileName,OutputFileName,xyzE,az,el)
 % a .pdf file. The user needs the 'timeconv' and 'gnss_datevec' functions
 % from my 'PEI-2017' github repository. Additionally,
 % the user needs the functions 'defval' and 'polecircle2'
-% from Frederik J. Simons' slepian github repository. 
+% from Frederik J. Simons' slepian github repository. Lastly, you will
+% need the 'earth_sphere' function to be able to plot a 3D Earth. 
 %
 % INPUT:
 %
