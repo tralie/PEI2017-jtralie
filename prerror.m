@@ -1,5 +1,5 @@
-function [err,corerr] = prerror(PVTSatFileName,MeasEpochFileName,GPSNavFileName,SVID,lat,lon,alt)
-% [err] = prerror(PVTSatFileName,MeasEpochFileName,GPSNavFileName,SVID,lat,lon,alt)
+function [err,corerr] = prerror(PVTSatFileName,MeasEpochFileName,GPSNavFileName,PVTGeoFileName,SVID,lat,lon,alt)
+% [err] = prerror(PVTSatFileName,MeasEpochFileName,GPSNavFileName,PVTGeoFileName,SVID,lat,lon,alt)
 % 
 % Calculation of the error between the pseudorange and the geometric
 % distance of a satellite to a fixed reference point.
@@ -192,17 +192,25 @@ end
 rad1 = [];
 prg1 = [];
 trop1 = [];
+[rclk] = rclkbias(PVTGeoFileName); 
 for j = 1:length(tdat)
     SVID1 = SVIDfinal{j};
     PR1 = PRfinal{j};
     svr1 = svr{j}; 
     r1 = rfinal{j};
     tropo = tropfinal{j};
+    iono = ionfinal{j}; 
     for i = 1:length(SVID1)
         prg1{j} = mean(PR1(SVID1==SVID));
     end
     for i = 1:length(svr1) 
         trop1{j} = tropo(svr1==SVID);
+        tropcontains = any(tropo(svr1==SVID));
+        ion1{j} = iono(svr1==SVID); 
+        if tropcontains == 0
+           trop1{j} = NaN;  
+           ion1{j} = NaN; 
+        end
         rad1{j} = mean(r1(svr1==SVID));
     end
 end
@@ -210,6 +218,6 @@ end
 satclk = satclkbias(GPSNavFileName,SVID); 
 % absolute value error calculation 
 err = abs(100*(cell2mat(prg1) - cell2mat(rad1))./cell2mat(rad1));
-corerr = abs(100*((cell2mat(prg1)*1000) - (cell2mat(rad1)*1000) + c*(satclk))./(cell2mat(rad1)*1000));
+corerr = abs(100*((cell2mat(prg1)*1000) - (cell2mat(rad1)*1000) - cell2mat(trop1) - cell2mat(ion1) - c*(rclk - satclk))./(cell2mat(rad1)*1000));
 % Clear temporary variables
 clearvars PVTSat delimiter formatSpec fileID dataArray ans;
