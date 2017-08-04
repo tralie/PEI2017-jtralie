@@ -1,4 +1,4 @@
-function varargout=errormeshplot(PVTSatFile,MeasEpochFile,GPSNavFile,PVTGeoFile,SVID,lat,lon,height,spacing,delta,OutputFile)
+function varargout=errormeshplot(PVTSatFile,MeasEpochFile,GPSNavFile,PVTGeoFile,SVID,lat,lon,height,spacing,delta,az,el,OutputFile)
 % varargout = weatherplot(PVTSatFile,MeasEpochFile,HGTFile,SVID,lat,lon,height,spacing,delta,OutputFile)
 %  
 % Generates a mesh plot of spacing by spacing dimensions of the simulated
@@ -46,6 +46,10 @@ function varargout=errormeshplot(PVTSatFile,MeasEpochFile,GPSNavFile,PVTGeoFile,
 %
 % delta              The distance between points (in degrees)
 %
+% az                 Defines the azimuth viewing angle
+%
+% el                 Defines the elevation viewing angle 
+%
 % OutputFile         The outputted filename
 %
 % OUTPUT:
@@ -57,11 +61,16 @@ function varargout=errormeshplot(PVTSatFile,MeasEpochFile,GPSNavFile,PVTGeoFile,
 %
 % Last modified by jtralie@princeton.edu on 08/04/2017
 
+% default values for the function 
 defval('lat',40.345811675440125); % Guyot Hall fixed latitude (degrees)
 defval('lon',-74.654736944340939); % Guyot Hall fixed longitude (degrees) 
 defval('height',46.692); % Guyot Hall fixed height (meters)
 defval('spacing',5); 
+defval('az',-43);
+defval('el',38);
 
+% setup a meshgrid spaced at the given delta value that is spacing by
+% spacing in dimension 
 [latvalues,lonvalues] = meshgrid(linspace(lat - delta,lat + delta,spacing),linspace(lon-delta,lon+delta,spacing));
 formatSpec = '%f%f%f%C%f%f%f%f%f%f%f%f%f%f%C%[^\n\r]';
 fileID = fopen(PVTSatFile,'r');
@@ -73,7 +82,7 @@ WN = dataArray{:, 2};
 gnss = timeconv(WN,TOW);
 gnssdatevec = gnss_datevec(gnss);
 
-
+% send data to the prerror function to calculate err and corerr
 err = [];
 [a,b] = size(latvalues);
 index = a*b; 
@@ -81,7 +90,7 @@ for i = 1:index
     [err{i},corerr{i}] = prerror(PVTSatFile,MeasEpochFile,GPSNavFile,PVTGeoFile,SVID,latvalues(i),lonvalues(i),height);
 end
 
-%%
+% obtain the average values for error and corrected error 
 for j = 1:length(err)
     error = err{j};
     corerror = corerr{j};
@@ -91,7 +100,7 @@ for j = 1:length(err)
     avgcor(j) = mean(corerror(ind)); 
 end
 
-%% plotting
+% plotting
 f = figure; 
 pointsize = 15; 
 lonout = lonvalues(:)';
@@ -125,7 +134,7 @@ zlim([0 1])
 title([SVID ' Uncorrected/Corrected Pseudorange Error for Varying Lat/Lon - ' num2str(gnssdatevec(1,2)) '/' num2str(gnssdatevec(1,3))])
 colormap('hot')
 caxis([0 1]) 
-view(-45,41)
+view(az,el)
 hold off
 grid on
 print(f,OutputFile,'-dpdf','-fillpage','-r0')
