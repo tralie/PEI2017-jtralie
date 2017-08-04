@@ -1,4 +1,4 @@
-function varargout=errormeshplot(PVTSatFile,MeasEpochFile,GPSNavFile,SVID,lat,lon,height,spacing,OutputFile)
+function varargout=errormeshplot(PVTSatFile,MeasEpochFile,GPSNavFile,PVTGeoFile,SVID,lat,lon,height,spacing,OutputFile)
 % varargout = weatherplot(PVTSatFile,MeasEpochFile,SVID,lat,lon,height,spacing,OutputFile)
 %  
 % Generates a mesh plot of spacing by spacing dimensions of the simulated
@@ -74,7 +74,7 @@ err = [];
 [a,b] = size(latvalues);
 index = a*b; 
 for i = 1:index  
-    [err{i},corerr{i}] = prerror(PVTSatFile,MeasEpochFile,GPSNavFile,SVID,latvalues(i),lonvalues(i),height);
+    [err{i},corerr{i}] = prerror(PVTSatFile,MeasEpochFile,GPSNavFile,PVTGeoFile,SVID,latvalues(i),lonvalues(i),height);
 end
 
 %%
@@ -113,7 +113,7 @@ zlabel('Pseudorange Error (%)')
 xlim([(lon-1) (lon+1)])
 ylim([(lat-1) (lat+1)])
 zlim([0 1])
-title([SVID ' Uncorrected Pseudorange Error for Varying Lat/Lon - ' num2str(gnssdatevec(1,2)) '/' num2str(gnssdatevec(1,3))])
+title([SVID ' Uncorrected/Corrected Pseudorange Error for Varying Lat/Lon - ' num2str(gnssdatevec(1,2)) '/' num2str(gnssdatevec(1,3))])
 colormap('hot')
 caxis([0 1]) 
 view(-44,7)
