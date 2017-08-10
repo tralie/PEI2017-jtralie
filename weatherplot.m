@@ -169,9 +169,7 @@ ZTD = 0.002277.*1000*Pas + 0.002277*(0.005 + (1255./(Tas + 273.15))).*es; % zeni
 ZHD = 0.0022765.*(1000*Pas)./(1-0.00266*cos(2*lat_rad)-.046692*2.8e-07); % zenith hydrostatic delay
 
 ZWD = ZTD - ZHD; % zenith wet delay
-Tm = 70.2 + Tas; % mean temperature
-K = .0046151.*(((3.719*10^5)./Tm) + 16.4221); 
-
+K = 0.15; % approximation for dimensionless constant of proportionality
 IWV = ZWD./K; % integrated water vapor 
 
 %% plotting weather data for Princeton station
