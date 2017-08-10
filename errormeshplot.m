@@ -28,6 +28,9 @@ function varargout=errormeshplot(PVTSatFile,MeasEpochFile,GPSNavFile,PVTGeoFile,
 % GPSNavFile          The GPSNav file returned from a bin2asc
 %                     conversion of SBF files
 %
+% PVTGeoFile         The PVTGeodetic2 file returned from a bin2asc
+%                    conversion
+%
 % SVID               The Space Vehicle Identification of the satellite
 %                    for which the error mesh plot will be generated. 
 %
@@ -120,7 +123,7 @@ set(b,'facecolor','none')
 hold on
 plot3(lonout,latout,avgcor,'.')
 hold on
-plot_google_map
+plot_google_map('MapType','satellite')
 hold off 
 text(lon,lat,'(Fixed)')
 h = colorbar;
