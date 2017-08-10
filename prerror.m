@@ -2,7 +2,8 @@ function [err,corerr] = prerror(PVTSatFileName,MeasEpochFileName,GPSNavFileName,
 % [err] = prerror(PVTSatFileName,MeasEpochFileName,GPSNavFileName,PVTGeoFileName,SVID,lat,lon,alt)
 % 
 % Calculation of the error between the pseudorange and the geometric
-% distance of a satellite to a fixed reference point.
+% distance of a satellite to a fixed reference point. Also calculates
+% the corrected pseudorange error (corrected for troposphere, ionosphere
 % Requires the function 'lla2ecef' to convert from lat, lon, and altitude
 % to earth-centered, earth fixed (ECEF) cartesian coordinates. Also,
 % the user needs the function 'defval' from Frederik J. Simons' slepian
@@ -18,6 +19,9 @@ function [err,corerr] = prerror(PVTSatFileName,MeasEpochFileName,GPSNavFileName,
 %
 % GPSNavFileName      The GPSNav file returned from a bin2asc
 %                     conversion of SBF files
+%
+% PVTGeoFile         The PVTGeodetic2 file returned from a bin2asc
+%                    conversion
 %
 % SVID               The Space Vehicle Identification of the satellite
 %                    for which the error will be calculated. 
@@ -50,6 +54,7 @@ function [err,corerr] = prerror(PVTSatFileName,MeasEpochFileName,GPSNavFileName,
 % PVTSatFileName = 'pton1900.17__SBF_PVTSatCartesian.txt';
 % MeasEpochFileName = 'pton1900.17__SBF_MeasEpoch2.txt';
 % GPSNavFileName = 'pton1900.17__SBF_GPSNav.txt';
+% PVTGeoFileName = 'pton1900.17__SBF_PVTGeodetic2.txt'; 
 %
 % These files can be given to the prerror function along with a 
 % SVID # for the satellite you wish to calculate the pseudorange error for.
@@ -68,7 +73,7 @@ function [err,corerr] = prerror(PVTSatFileName,MeasEpochFileName,GPSNavFileName,
 % It also returns a 24 column matrix consisting of the corrected error
 % which follows a similar behavior to the above mentioned error matrix. 
 % 
-% Last modified by jtralie@princeton.edu on 08/03/2017
+% Last modified by jtralie@princeton.edu on 08/10/2017
 
 % data format setup/import 
 defval('lat',40.345811675440125) % Guyot latitude
