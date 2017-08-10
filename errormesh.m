@@ -1,4 +1,4 @@
-function [correctederror,minlat,minlon]=errormesh(PVTSatFile,MeasEpochFile,GPSNavFile,PVTGeoFile,SVID,lat,lon,height,spacing,delta)
+function [correctederror,minlat,minlon,time]=errormesh(PVTSatFile,MeasEpochFile,GPSNavFile,PVTGeoFile,SVID,lat,lon,height,spacing,delta)
 % varargout = weatherplot(PVTSatFile,MeasEpochFile,HGTFile,SVID,lat,lon,height,spacing,delta,OutputFile)
 %  
 % Finds the minimum latitude/longitude of
@@ -22,6 +22,9 @@ function [correctederror,minlat,minlon]=errormesh(PVTSatFile,MeasEpochFile,GPSNa
 %
 % GPSNavFile          The GPSNav file returned from a bin2asc
 %                     conversion of SBF files
+%
+% PVTGeoFile         The PVTGeodetic2 file returned from a bin2asc
+%                    conversion
 %
 % SVID               The Space Vehicle Identification of the satellite
 %                    for which the error mesh plot will be generated. 
@@ -49,7 +52,7 @@ function [correctederror,minlat,minlon]=errormesh(PVTSatFile,MeasEpochFile,GPSNa
 % of an inputted satellite is minimized.  
 %
 %
-% Last modified by jtralie@princeton.edu on 08/04/2017
+% Last modified by jtralie@princeton.edu on 08/10/2017
 defval('lat',40.345811675440125); % Guyot Hall fixed latitude (degrees)
 defval('lon',-74.654736944340939); % Guyot Hall fixed longitude (degrees) 
 defval('height',46.692); % Guyot Hall fixed height (meters)
@@ -64,8 +67,7 @@ fclose(fileID);
 TOW = dataArray{:, 1};
 WN = dataArray{:, 2};
 gnss = timeconv(WN,TOW);
-gnssdatevec = gnss_datevec(gnss);
-
+time = gnss_datevec(gnss);
 
 err = [];
 [a,b] = size(latvalues);
