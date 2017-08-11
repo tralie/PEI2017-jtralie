@@ -170,7 +170,7 @@ ZHD = 0.0022765.*(1000*Pas)./(1-0.00266*cos(2*lat_rad)-.046692*2.8e-07); % zenit
 
 ZWD = ZTD - ZHD; % zenith wet delay
 K = 0.15; % approximation for dimensionless constant of proportionality
-IWV = ZWD./K; % integrated water vapor 
+IWV = ZWD.*K; % integrated water vapor 
 
 %% plotting weather data for Princeton station
 h = figure;
