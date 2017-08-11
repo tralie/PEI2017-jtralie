@@ -165,10 +165,10 @@ es = 6.11*10.^((7.5.*Tas)./(237.3+Tas));
 
 lat_rad = 0.704167253126;
 
-ZTD = 0.002277.*1000*Pas + 0.002277*(0.005 + (1255./(Tas + 273.15))).*es; % zenith total delay
-ZHD = 0.0022765.*(1000*Pas)./(1-0.00266*cos(2*lat_rad)-.046692*2.8e-07); % zenith hydrostatic delay
+ZTD = 0.002277.*1000*Pas + 0.002277*(0.005 + (1255./(Tas + 273.15))).*es; % zenith total delay (m)
+ZHD = 0.0022765.*(1000*Pas)./(1-0.00266*cos(2*lat_rad)-.046692*.00028); % zenith hydrostatic delay (m)
 
-ZWD = ZTD - ZHD; % zenith wet delay
+ZWD = ZTD - ZHD; % zenith wet delay (m)
 K = 0.15; % approximation for dimensionless constant of proportionality
 IWV = ZWD.*K; % integrated water vapor 
 
