@@ -1,5 +1,5 @@
 function varargout = delaysplot(PVTSatFileName,SVID,lat,lon,alt,OutputFileName)
-% varargout = weatherplot(ASCIIIfiles,OutputFileName,Title)
+% varargout = delaysplot(ASCIIIfiles,OutputFileName,Title)
 % 
 % Plots a 5 subplot figure consisting of integrated water vapor,
 % temperature, pressure, relative humidity, and rain. These plots are
@@ -79,8 +79,7 @@ vzfinal = vz(SV == SVID);
 wnfinal = WN(SV == SVID); 
 towfinal = TOW(SV == SVID);
 time = timeconv(wnfinal,towfinal);
-gnss = gnss_datevec(time);
-time = datenum(gnss); 
+time = gnss_datevec(time);
 
 % Convert latitude/longitude to radians for lla2ecef function
 lat_rad = deg2rad(lat);
@@ -110,9 +109,9 @@ quiver3(pxfinal,pyfinal,pzfinal,vxfinal,vyfinal,vzfinal)
 hold on
 plot3(rX,rY,rZ,'r*')
 grid on
-title(['Satellite Tracks for ' SVID])
-text(pxfinal(1),pyfinal(1),pzfinal(1),'Start')
-text(pxfinal(end),pyfinal(end),pzfinal(end),'End')
+title(['Satellite Tracks for ' SVID ' ' num2str(gnss(1,2)) '/' num2str(gnss(1,3))])
+text(pxfinal(1),pyfinal(1),pzfinal(1),[datestr(time(1),'HH:MM')])
+text(pxfinal(end),pyfinal(end),pzfinal(end),[datestr(time(end),'HH:MM')])
 set(h,'PaperOrientation','landscape');
 set(gcf,'Position',[500 300 900 340])
 print(h,OutputFileName,'-bestfit','-dpdf','-r0')
