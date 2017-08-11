@@ -1,5 +1,5 @@
 function [correctederror,minlat,minlon,time]=errormesh(PVTSatFile,MeasEpochFile,GPSNavFile,PVTGeoFile,SVID,lat,lon,height,spacing,delta)
-% varargout = weatherplot(PVTSatFile,MeasEpochFile,HGTFile,SVID,lat,lon,height,spacing,delta,OutputFile)
+% varargout = errormesh(PVTSatFile,MeasEpochFile,HGTFile,SVID,lat,lon,height,spacing,delta,OutputFile)
 %  
 % Finds the minimum latitude/longitude of
 % a mesh plot of spacing by spacing dimensions of the simulated
