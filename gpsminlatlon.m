@@ -1,5 +1,5 @@
 function [latmin,lonmin,distance] = gpsminlatlon(PVTSatFile,MeasEpochFile,GPSNavFile,PVTGeoFile,lat,lon,height,spacing,delta,OutputFileName) 
-% varargout = weatherplot(ASCIIIfiles,OutputFileName,Title)
+% varargout = gpsminlatlon(ASCIIIfiles,OutputFileName,Title)
 % 
 % Plots a 5 subplot figure consisting of integrated water vapor,
 % temperature, pressure, relative humidity, and rain. These plots are
