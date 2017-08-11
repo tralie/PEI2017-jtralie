@@ -113,6 +113,6 @@ xlabel('Longitude (degrees)')
 ylabel('Latitude (degrees)') 
 grid on; 
 text(lon,lat,'Fixed')
-title(['Lat/Lon Offset from Fixed Position: ' num2str(distance) ' (degrees) on ' num2str(time1(1,2)) '/' num2str(time1(1,3))])
+title(['Min Lat: ' num2str(latmin) ' Min Lon: ' num2str(lonmin) ' on ' num2str(time1(1,2)) '/' num2str(time1(1,3))])
 print(h,OutputFileName,'-bestfit','-dpdf','-r0')
 
