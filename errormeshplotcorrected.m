@@ -12,9 +12,7 @@ function varargout=errormeshplotcorrected(PVTSatFile,MeasEpochFile,GPSNavFile,PV
 % and altitude to earth-centered, earth fixed (ECEF) cartesian coordinates.
 % Also, the user needs the functions 'timeconv' and 'gnss_datevec' from my
 % 'PEI2017-jtralie' github repository. This is to generate a title that 
-% includes the date. Lastly, the user needs the plot_google_map function
-% available on the MathWorks website from Zohar Bar-Yehuda. This plots
-% a map from Google Earth of the region on the xy-plane of the figure. 
+% includes the date.
 %
 % INPUT:
 %
@@ -56,7 +54,7 @@ function varargout=errormeshplotcorrected(PVTSatFile,MeasEpochFile,GPSNavFile,PV
 %
 % OUTPUT:
 %
-% A mesh plot of simulated uncorrected and corrected error at different 
+% A mesh plot of simulated corrected error at different 
 % latitudes and longitudes for the pseudorange of an inputted satellite. 
 %
 %
@@ -117,8 +115,6 @@ b=mesh(lonvalues,latvalues,w);
 set(b,'facecolor','none')
 hold on
 plot3(lonout,latout,avgcor,'.')
-hold on
-plot_google_map('MapType','satellite')
 hold off 
 text(lon,lat,'(Fixed)')
 xlabel('Longitude (Degrees)')
