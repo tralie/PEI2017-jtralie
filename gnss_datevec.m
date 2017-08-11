@@ -36,4 +36,4 @@ function gnss_datevec=gnss_datevec(gnss_time)
 %
 % Last modified by jtralie@princeton.edu on 07/26/2017.
 
-gnss_datevec = datevec(gnss_time/86400) + [1980 0 6 0 0 0]; 
+gnss_datevec = datevec(gnss_time/86400 + 6) + [1980 0 0 0 0 0]; 
