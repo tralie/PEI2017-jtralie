@@ -1,5 +1,5 @@
 function varargout=errormeshplot(PVTSatFile,MeasEpochFile,GPSNavFile,PVTGeoFile,SVID,lat,lon,height,spacing,delta,az,el,OutputFile)
-% varargout = weatherplot(PVTSatFile,MeasEpochFile,HGTFile,SVID,lat,lon,height,spacing,delta,OutputFile)
+% varargout = errormeshplot(PVTSatFile,MeasEpochFile,HGTFile,SVID,lat,lon,height,spacing,delta,OutputFile)
 %  
 % Generates a mesh plot of spacing by spacing dimensions of the simulated
 % uncorrected pseudorange error at different lat/lon values around the 
@@ -126,8 +126,6 @@ hold on
 plot_google_map('MapType','satellite')
 hold off 
 text(lon,lat,'(Fixed)')
-h = colorbar;
-ylabel(h,'Pseudorange Error (%)')
 xlabel('Longitude (Degrees)')
 ylabel('Latitude (Degrees)')
 zlabel('Pseudorange Error (%)')
@@ -135,8 +133,6 @@ xlim([(lon-delta) (lon+delta)])
 ylim([(lat-delta) (lat+delta)])
 zlim([0 1])
 title([SVID ' Uncorrected/Corrected Pseudorange Error for Varying Lat/Lon - ' num2str(gnssdatevec(1,2)) '/' num2str(gnssdatevec(1,3))])
-colormap('hot')
-caxis([0 1]) 
 view(az,el)
 hold off
 grid on
